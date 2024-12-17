@@ -10,15 +10,22 @@
     <div class="row">
         <div class="col-8 offset-2">
     <h3> Create a New listing</h3>
-    <form method="POST" action="/listings">
+    <!-- adding novalidate and class ="needs-validation" to the form-->
+     <!-- novalidate prevents the browser prevent browser from validating the-->
+    <form method="POST" action="/listings" novalidate class="needs-validation" >
         <div>
         <label for="title" class="form-label"> title</label>
-        <input name="listing[title]" placeholder="enter title" type="text" class="form-control">
+        <input name="listing[title]" placeholder="enter title" type="text" class="form-control" required>
+        <!-- this valid and invalid is for checking -->
+        <div class="valid-feedback">Title Looks Good!</div>
+        <div class="invalid-feedback">Enter valid title!</div>
         </div>
         <br>
     <div>
         <label for="description" class="form-label"> Description</label>
-        <textarea name="listing[description]" placeholder="enter description" class="form-control"></textarea>
+        <textarea name="listing[description]" placeholder="enter description" class="form-control" required></textarea>
+        <div class="valid-feedback">Description Looks Good!</div>
+        <div class="invalid-feedback">Enter valid Description!</div>
     </div>
         <br> 
     <div>
@@ -29,17 +36,23 @@
    <div class="row">
        <div class="mb-3 col-4" >
           <label for="price" class="form-label"> Number</label>
-          <input name="listing[price]" placeholder="enter number" type="number" class="form-control">
+          <input name="listing[price]" placeholder="enter number" type="number" class="form-control" required>
+          <!-- <div class="valid-feedback">Title Looks Good!</div> -->
+          <div class="invalid-feedback">Enter valid Price!</div>
        </div>
         <br> <br>
         <div class="mb-3 col-8">
             <label for="country" class="form-label"> Country</label>
-            <input name="listing[country]" placeholder="enter country" type="text" class="form-control">
+            <input name="listing[country]" placeholder="enter country" type="text" class="form-control" required>
+            <div class="valid-feedback"> Looks Good!</div>
+            <div class="invalid-feedback">Enter valid Country Name!</div>
         </div>
    </div>
         <div>
             <label for="location" class="form-label"> Location</label>
-           <input name="listing[location]" placeholder="enter Location" type="text" class="form-control">
+           <input name="listing[location]" placeholder="enter Location" type="text" class="form-control" required>
+           <!-- <div class="valid-feedback">Title Looks Good!</div> -->
+           <div class="invalid-feedback">Enter valid Location!</div>
            </div>
         
         <br> <br>
