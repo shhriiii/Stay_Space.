@@ -8,6 +8,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const { listingSchema } = require("./schema.js");
 
 
 
@@ -36,6 +37,19 @@ app.get("/" , (req , res) => {
     res.send("hi i am root!");
 });
 
+const validateListing = (req , res , next) =>{
+    let { error } = listingSchema.validate(req.body);
+
+    if(error){
+        let errMsg = error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400 ,errMsg);
+    }
+    else{
+        next();
+    }
+
+}
+
 //index route
 app.get("/listings" , wrapAsync(async(req,res) =>{
    const allListings = await Listing.find({});
@@ -58,14 +72,19 @@ app.get("/listings/:id" , wrapAsync(async(req, res) =>{
 }));
 
 //create route (add button)
-app.post("/listings" , wrapAsync(async(req , res , next) => {
+app.post("/listings" ,validateListing, wrapAsync(async(req , res , next) => {
     //one way to extrct also rembr post ke sath body use hota aur get ke sath params
     //let {title , description , image , price , country , location} = req.body;
     //other way is go to neww.ejs aur title ko listing[title] krdo mtlb key value pair bana dema
     //js object bnjata hai
     //let listing = req.body.listing;
-    if(!req.body.listing){
-        throw new ExpressError(400 , "Invalid listing");
+    // if(!req.body.listing){
+    //     throw new ExpressError(400 , "Invalid listing");
+    // }
+    let result = listingSchema.validate(req.body);
+    console.log(result);
+    if(result.error){
+        throw new ExpressError(400 , result.error);
     }
     const newListing = new Listing(req.body.listing);
         await newListing.save();
@@ -82,10 +101,12 @@ app.get("/listings/:id/edit" , wrapAsync(async(req , res) =>{
 }));
 
 //update 
-app.put("/listings/:id" , wrapAsync(async(req , res) => {
-    if(!req.body.listing){
-        throw new ExpressError(400 , "Invalid listing");
-    }
+app.put("/listings/:id" ,validateListing, wrapAsync(async(req , res) => {
+    // the error part is added to validatelisting func hence cmmented out from here
+
+    // if(!req.body.listing){
+    //     throw new ExpressError(400 , "Invalid listing");
+    // }
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id , { ...req.body.listing });
    // res.redirect("/listings"); or
@@ -111,7 +132,12 @@ app.all("*" , (req , res , next) => {
 app.use((err , req , res , next)=>{
     // res.send("something went wrong!")
     let {statusCode =500 , message="something went wrong"} = err;
-    res.status(statusCode).send(message);
+    // res.status(statusCode).send(message);
+    //earlier it was only res.render thn added status to it
+    // res.render("error.ejs" , { message });
+    res.status(statusCode).render("error.ejs" , { message });
+    
+    
 })
 
 
