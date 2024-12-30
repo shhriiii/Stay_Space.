@@ -152,6 +152,18 @@ app.post("/listings/:id/reviews" ,validateReview , wrapAsync(async(req , res) =>
 
 }));
 
+//delete review
+// Delete Review Route
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params;
+   //find by id and update is bcz we want to delete the listing from the array also
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    //this will dlete from page only
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}`);
+}));
+
 
 
 //if called route deosnt exist
