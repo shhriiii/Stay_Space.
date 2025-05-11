@@ -1,30 +1,14 @@
 const express = require("express");
 const wrapAsync = require("../utils/wrapAsync.js");
 const router = express.Router();
-const { listingSchema , reviewSchema } = require("../schema.js");
-const ExpressError = require("../utils/ExpressError.js");
+
 const Listing = require("../models/listing.js");
-const { isLoggedIn } = require("../middleware.js");
+const { isLoggedIn, isOwner , validateListing } = require("../middleware.js");
 
-const validateListing = (req , res , next) =>{
-    let { error } = listingSchema.validate(req.body);
 
-    if(error){
-        let errMsg = error.details.map((el) => el.message).join(",");
-        throw new ExpressError(400 ,errMsg);
-    }
-    else{
-        next();
-    }
-
-}
 
 //index route
-router.get("/" , wrapAsync(async(req,res) =>{
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs" , {allListings});
- 
- }));
+router.get("/" , wrapAsync());
  
  //new route 
  //how route ke upar page 10
@@ -42,7 +26,7 @@ router.get("/" , wrapAsync(async(req,res) =>{
  router.get("/:id" , wrapAsync(async(req, res) =>{
      let {id} = req.params; 
      // const listing=await Listing.findById(id);
-     const listing=await Listing.findById(id).populate("reviews").populate("owner");
+     const listing=await Listing.findById(id).populate({path: "reviews",populate:{path: "author",},}).populate("owner");
      if(!listing){
         req.flash("error" , "listing does not exist");
         res.redirect("/listings");
@@ -76,28 +60,32 @@ router.get("/" , wrapAsync(async(req,res) =>{
  );
  
  //edit
- router.get("/:id/edit" ,isLoggedIn, wrapAsync(async(req , res) =>{
+ router.get("/:id/edit" ,isLoggedIn,isOwner,wrapAsync(async(req , res) =>{
      let { id } = req.params; 
      const listing=await Listing.findById(id);
      res.render("listings/edit.ejs" , { listing });  
  }));
  
  //update 
- router.put("/:id",isLoggedIn, validateListing, wrapAsync(async(req , res) => {
-     // the error part is added to validatelisting func hence cmmented out from here
- 
-     // if(!req.body.listing){
-     //     throw new ExpressError(400 , "Invalid listing");
-     // }
-     let { id } = req.params;
-     await Listing.findByIdAndUpdate(id , { ...req.body.listing });
-    // res.redirect("/listings"); or
-    res.redirect(`/listings/${id}`);
- 
- }));
+ // Update Route
+//yaha peedit wala ahr ek route mai use kne se aca hum middleware banaenge aur usko use krre hounge
+router.put(
+    "/:id",
+    isLoggedIn,
+    isOwner,
+    validateListing,
+    wrapAsync(async (req, res) => {
+      let { id } = req.params;
+      await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+      req.flash("success", "Listing Updated!");
+      res.redirect(`/listings/${id}`);
+    })
+  );
+  
+  
  
  //delte route
- router.delete("/:id" ,isLoggedIn, wrapAsync(async(req , res ) => {
+ router.delete("/:id" ,isLoggedIn,isOwner, wrapAsync(async(req , res ) => {
      let { id } = req.params;
      let deletedListing =await Listing.findByIdAndDelete(id)
      req.flash("success" , "Listing deleted successfully");

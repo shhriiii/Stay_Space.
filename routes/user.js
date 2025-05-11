@@ -45,8 +45,9 @@ router.post(
     }),
     async (req, res) => {
         req.flash("success", "Welcome to Wanderlust! You are logged in!");
-        let redirectUrl = res.locals.redirectUrl || "/listings"; //yaha pr || isliye use kia if wrong id pass dalre the toh page not ound ara tha
-res.redirect(res.locals.redirectUrl);
+        let redirectUrl = res.locals.redirectUrl || "/listings";
+        res.redirect(redirectUrl);
+        
 
     }
 
