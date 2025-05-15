@@ -38,13 +38,17 @@ module.exports.index = async(req,res) =>{
     //     throw new ExpressError(400 , "Invalid listing");
     // }
     let result = listingSchema.validate(req.body);
-    console.log(result);
+    // console.log(result);
     if(result.error){
         throw new ExpressError(400 , result.error);
     }
+    let url = req.file.path;
+    let filename = req.file.filename;
+    
     const newListing = new Listing(req.body.listing);
     //while adding the new lsiting user is not added so we need to add it
     newListing.owner = req.user._id;
+    newListing.image = {url , filename};
         await newListing.save();
         req.flash("success" , "New listing added successfully");
        res.redirect("/listings");
@@ -62,7 +66,13 @@ module.exports.renderEditForm = async(req , res) =>{
     //update listing
   module.exports.updateListing = async (req, res) => {
     let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if(typeof req.file !== "undefined"){
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = { url, filename };
+    await listing.save();
+    }
     req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
   };

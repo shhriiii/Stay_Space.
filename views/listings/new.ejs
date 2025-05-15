@@ -12,7 +12,7 @@
     <h3> Create a New listing</h3>
     <!-- adding novalidate and class ="needs-validation" to the form-->
      <!-- novalidate prevents the browser prevent browser from validating the-->
-    <form method="POST" action="/listings" novalidate class="needs-validation" >
+    <form method="POST" action="/listings" novalidate class="needs-validation"  enctype="multipart/form-data">
         <div>
         <label for="title" class="form-label"> title</label>
         <input name="listing[title]" placeholder="enter title" type="text" class="form-control" required>
@@ -28,9 +28,11 @@
         <div class="invalid-feedback">Enter valid Description!</div>
     </div>
         <br> 
+    
     <div>
-        <label for="image" class="form-label"> image</label>
-        <input name="listing[image]" placeholder="image url " type="text" class="form-control">
+        <label for="image" class="form-label"> Upload listing image</label>
+        <input name="listing[image]" type="file" class="form-control">
+        required
     </div>
         <br> 
    <div class="row">
