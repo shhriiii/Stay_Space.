@@ -1,6 +1,9 @@
 const Listing = require('../models/listing.js');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js"); // also required
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async(req,res) =>{
     const allListings = await Listing.find({});
@@ -29,6 +32,12 @@ module.exports.index = async(req,res) =>{
    };
 
    module.exports.createListing = async(req , res , next) => {
+   let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 2
+      })
+        .send()
+        
     //one way to extrct also rembr post ke sath body use hota aur get ke sath params
     //let {title , description , image , price , country , location} = req.body;
     //other way is go to neww.ejs aur title ko listing[title] krdo mtlb key value pair bana dema
@@ -61,7 +70,10 @@ module.exports.renderEditForm = async(req , res) =>{
         req.flash("error" , "listing does not exist");
         res.redirect("/listings");
     }
-    res.render("listings/edit.ejs" , { listing });  
+    let originalImageUrl = listing.image.url;
+    originalImageUrl.replace("/upload" , "/upload/h_300,w_250")
+
+    res.render("listings/edit.ejs" , { listing , originalImageUrl });  
 };
     //update listing
   module.exports.updateListing = async (req, res) => {
