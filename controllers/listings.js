@@ -58,7 +58,9 @@ module.exports.index = async(req,res) =>{
     //while adding the new lsiting user is not added so we need to add it
     newListing.owner = req.user._id;
     newListing.image = {url , filename};
-        await newListing.save();
+    newListing.geometry = response.body.features[0].geometry;
+       let savedListing = await newListing.save();
+       console.log(savedListing);
         req.flash("success" , "New listing added successfully");
        res.redirect("/listings");
     
