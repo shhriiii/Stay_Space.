@@ -1,116 +1,296 @@
-body{
-   font-family: "Plus Jakarta Sans", sans-serif !important;
-   /* niche footer float krra hai uske liye */
-   display: flex;
-   flex-direction: column;
-   min-height: 100vh;
-
+/* ====== BODY & BACKGROUND ====== */
+body, 
+h3, 
+label, 
+input, 
+textarea, 
+button {
+  color: #e0e0e0 !important;  /* light text color */
 }
-.container{
-   flex: 1;
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, #1b0037 0%, #0f0f1c 60%, #000000 100%);
+  color: #e0e0e0;
+  position: relative;
+  overflow-x: hidden;
 }
- .navbar{
-    height: 5rem;
-    background-color: white;
- }
 
- .fa-compass{
-    color: #fe424d;
-    font-size: 2rem;
- }
- .nav-link{
-    color: #222222 !important
-    /* important is used here for bootstrap bcz bootstrpka apna hoa hai via important we can override it */
- }
+/* Starfield overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(2px 2px at 10% 20%, #fff 90%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40% 80%, #fff 90%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 70% 40%, #fff 90%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 85% 70%, #fff 90%, transparent 100%),
+    radial-gradient(1.1px 1.1px at 50% 50%, #fff 90%, transparent 100%);
+  background-repeat: repeat;
+  animation: twinkle 10s infinite alternate ease-in-out;
+  z-index: 0;
+}
 
- /* footer */
- .f-info-links a {
-    text-decoration: none;
-    color: #222222;
- }
- .f-info-links a:hover {
-    text-decoration: underline;
-    color: #222222;
- }
- .f-info-links , .f-info-social , .f-info-brand{
-    width: 100%;
-    /* niche wale thora upar size hai uske div ke center ma lana  */
-    display: flex;
-    align-items: center;
-    justify-content: center;
- }
- 
- .f-info-social i{
-    font-size: 1.3rem;
-    margin-right: 1rem;
- }
- .f-info{
-    text-align: center;
-    display: flex;
-    height: 8rem;
-    background-color: #ebebeb;
-    flex-wrap: wrap ;
-    justify-content: center;
-    align-items: space-evenly;
- }
- /* cards */
- .listing-card{
-   border: none !important;
-   margin-bottom: 2rem;
- }
- .card-img-top{
-   border-radius: 2 rem !important;
-   width: 100% !important;
-   object-fit: cover !important;
- }
- .card-body{
-   padding: 0 !important;
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
 
- }
- .card-text p{
-   font-weight: 400;
- }
+/* Nebula glow effect */
+body::after {
+  content: "";
+  position: fixed;
+  top: 30%;
+  left: 70%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle at center, #7f5af0aa, transparent 80%);
+  filter: blur(60px);
+  z-index: 0;
+  pointer-events: none;
+}
 
- /* card ko anchor banane ke bd usme underline aarahi hai usse get rid kaise krey? */
- .listing-link {
-   text-decoration: none;
- }
+/* Ensure content is above starfield */
+.container,
+.navbar,
+.f-info,
+.listing-card,
+.show-card {
+  position: relative;
+  z-index: 1;
+}
 
- /* ye jo class hai wo bootstrap mai already hai */
- .card-img-overlay {
-   opacity: 0;
- }
- .card-img-overlay:hover{
-   opacity: 0.2 ;
-   background-color: white;
- }
- /* add new listing page button */
- .add-btn{
-   background-color: #fe424d !important;
-   border: none !important;
- }
- /* edit btn of edit page */
+/* ====== CONTAINER ====== */
+.container {
+  flex: 1;
+}
 
- .edit-btn{
-   background-color: #fe424d !important;
-   border: none !important;
- }
- /* show page */
- .show-img{
-   height: 30vh;
+/* ====== NAVBAR ====== */
+.navbar {
+  height: 5rem;
+  background-color: #1a1a2e;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
 
- }
- /* listing details */
- .btns{
-   display: flex;
- }
- .show-card{
-   padding-left: 0;
-   padding-right: 0;
- }
+.fa-campground {
+  color: #7f5af0;
+  font-size: 2rem;
+  transition: transform 0.3s ease;
+}
 
- #map { 
+.fa-campground:hover {
+  transform: rotate(20deg);
+}
+
+.nav-link {
+  color: #e0e0e0 !important;
+}
+
+/* ====== FOOTER INFO ====== */
+.f-info {
+  text-align: center;
+  display: flex;
+  height: 8rem;
+  background-color: #1a1a2e;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: space-evenly;
+  color: #ccc;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+.f-info-links a,
+.f-info-social i,
+.f-info-brand {
+  color: #b8b8ff;
+  text-decoration: none;
+  text-shadow: 0 0 5px rgba(127, 90, 240, 0.7);
+}
+
+.f-info-links a:hover {
+  text-decoration: underline;
+  color: #e0e0e0;
+}
+
+.f-info-links,
+.f-info-social,
+.f-info-brand {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-info-social i {
+  font-size: 1.3rem;
+  margin-right: 1rem;
+}
+
+/* ====== LISTING CARDS ====== */
+.listing-card {
+  margin-bottom: 2rem; /* or whatever gap size you want */
+}
+.listing-card,
+.listing-card .card-footer {
+  background: rgba(31, 31, 46, 0.85) !important; /* dark translucent */
+  border: none !important;
+  color: #ddd !important;
+  box-shadow: 0 10px 30px rgba(127, 90, 240, 0.6);
+  border-radius: 1rem;
+}
+
+.listing-card .card-footer {
+  border-radius: 0 0 1rem 1rem; /* rounded bottom corners */
+  padding: 1rem;
+  box-shadow: inset 0 0 10px rgba(127, 90, 240, 0.3);
+}
+
+.listing-card .card-body {
+  padding: 1rem !important;
+  background: transparent !important;
+}
+
+.card-img-top {
+  border-radius: 1rem 1rem 0 0 !important;
+  width: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Make sure no white background inside overlay or other elements */
+.card-img-overlay {
+  background-color: transparent !important;
+  color: #f0f0f0 !important;
+}
+
+
+.listing-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 50px rgba(127, 90, 240, 0.9);
+}
+
+.card-img-top {
+  border-radius: 1rem 1rem 0 0 !important;
+  width: 100% !important;
+  object-fit: cover !important;
+}
+
+.card-body {
+  padding: 1rem !important;
+}
+
+.card-text p {
+  color: #e0e0e0;
+  font-weight: 400;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Links inside cards */
+.listing-link {
+  color: #b8b8ff;
+  text-decoration: none;
+}
+
+.listing-link:hover {
+  color: #d6d6ff;
+  text-decoration: underline;
+}
+
+/* Card titles */
+.card-title,
+.card-header {
+  color: #b8b8ff;
+  text-shadow: 0 0 6px rgba(127, 90, 240, 0.8);
+}
+
+/* ====== OVERLAY ====== */
+.card-img-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  color: #f0f0f0 !important;
+  text-shadow: 0 0 5px rgba(127, 90, 240, 0.7);
+}
+
+.card-img-overlay:hover {
+  opacity: 0.2;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ====== BUTTONS ====== */
+.add-btn,
+.edit-btn {
+  background: linear-gradient(135deg, #7f5af0, #2cb67d);
+  color: #fff;
+  border: none !important;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 15px rgba(127, 90, 240, 0.6);
+  transition: background 0.3s, transform 0.2s ease;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.add-btn:hover,
+.edit-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #2cb67d, #7f5af0);
+  box-shadow: 0 0 20px rgba(127, 90, 240, 0.9);
+}
+
+/* ====== SHOW PAGE ====== */
+.show-img {
+  height: 30vh;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.btns {
+  display: flex;
+  gap: 1rem;
+}
+
+.show-card {
+  padding-left: 0;
+  padding-right: 0;
+  background-color: #2d2d3a;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+  color: #e0e0e0;
+}
+
+/* ====== MAP ====== */
+#map {
   height: 300px;
   width: 80vh;
- }
+  border-radius: 1rem;
+  filter: brightness(0.8) contrast(1.2);
+  box-shadow: 0 0 15px rgba(127, 90, 240, 0.5);
+}
+
+
+.alert-danger {
+  margin-top: 2rem;
+  background-color: rgba(255, 0, 60, 0.1) !important; /* subtle reddish */
+  color: #ff6b81 !important; /* neon red-pink */
+  border: 1px solid #ff4c68 !important;
+  box-shadow: 0 0 10px rgba(255, 0, 60, 0.4);
+}
+
+.alert-success {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  background-color: rgba(44, 182, 125, 0.1) !important; /* soft green glow */
+  color: #2cb67d !important;
+  border: 1px solid #2cb67d !important;
+  box-shadow: 0 0 10px rgba(44, 182, 125, 0.4);
+}
+
+
  
