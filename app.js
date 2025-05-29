@@ -113,6 +113,10 @@ app.use("/listings" , listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/" , userRouter);
 
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
+
 
 
 
@@ -135,9 +139,14 @@ app.use((err , req , res , next)=>{
 })
 
 //serve ron
-app.listen(8080 ,() => {
-    console.log("server on");
+// app.listen(8080 ,() => {
+//     console.log("server on");
+// });
+const port = process.env.PORT || 8080;
+app.listen(port ,() => {
+    console.log(`Server running on port ${port}`);
 });
+
 
 
 
