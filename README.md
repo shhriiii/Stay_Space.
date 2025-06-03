@@ -19,6 +19,7 @@ https://stay-space.onrender.com/listings
   - Pricing
 - 👨‍💻 MVC architecture for clean and scalable code
 - 💡 Intuitive UI with a focus on usability
+- 🗺️ Integrated interactive map to view the location of each stay
 
 ---
 
